@@ -1,18 +1,22 @@
 print("You started Me")
 
-from groq import Groq
+import threading
 import subprocess
 import pyttsx3
+from groq import Groq
 from time import sleep
 from Automation.Web_Open import openweb
 from Automation.App_Open import openapp
+from Image_Generation.image_generator import generateimage
+from Youtube.Open_Youtube import play_music
+from Youtube.Open_Youtube import play_video
 
 print("imported modules")
 
 with open("Input.txt", "w") as file:
     file.write("")
 
-subprocess.Popen(["python", "E:\Assistants\A.I\STT.py"])
+subprocess.Popen(["python", "E:\\Assistants\\A.I\\STT.py"])
 
 sleep(15)
 
@@ -23,9 +27,7 @@ def speak(text):
     engine.say(text)
     engine.runAndWait()
 
-client = Groq(
-    api_key="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",
-)
+client = Groq(api_key="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")
 Checker = ""
 
 print("step 2 completed")
@@ -37,17 +39,37 @@ conversation_history = [
     }
 ]
 
-print("started !")
+print("started!")
+
+# Function to handle each process
+def process_task(main_output):
+    # Run these functions in parallel
+    threads = []
+    t1 = threading.Thread(target=openapp, args=(main_output,))
+    t2 = threading.Thread(target=openweb, args=(main_output,))
+    t3 = threading.Thread(target=generateimage, args=(main_output,))
+    t4 = threading.Thread(target=play_music, args=(main_output,))
+    t5 = threading.Thread(target=play_video, args=(main_output,))
+
+    # Start all threads
+    for thread in [t1, t2, t3, t4, t5]:
+        thread.start()
+        threads.append(thread)
+
+    # Wait for all to finish
+    for thread in threads:
+        thread.join()
 
 while True:
-    with open("input.txt", "r") as myfile:
+    with open("Input.txt", "r") as myfile:
         Main_output = myfile.read()
 
     if Main_output != Checker:
         if Main_output != "":
-            openapp(Main_output)
-            openweb(Main_output)
+            # Process the tasks in parallel
+            process_task(Main_output)
 
+            # Add the conversation
             conversation_history.append({
                 "role": "user",
                 "content": Main_output,
@@ -75,4 +97,5 @@ while True:
 
             print(response)
             speak(response)
+
         Checker = Main_output
