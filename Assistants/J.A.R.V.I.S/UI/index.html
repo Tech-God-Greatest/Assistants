@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Interface</title>
+    <style>
+        /* Body styling with dark theme */
+        body {
+            background-color: #0a0a0a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #00ffff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            position: relative; /* For bottom-right box positioning */
+            transition: background-color 0.5s, color 0.5s; /* Smooth transition for theme changes */
+        }
+
+        /* Neon glowing title for J.A.R.V.I.S */
+        h1 {
+            font-size: 4rem;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.7), 0 0 30px rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', sans-serif; /* A futuristic font */
+            margin: 0;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        /* Time display styling */
+        .time {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00ffff;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Subtitle text for 'By Lakshit Agarwal' */
+        .subtitle {
+            margin-top: 10px; /* Space between title and subtitle */
+            color: rgba(255, 255, 255, 0.6);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2rem; /* Subtitle font size */
+        }
+
+        /* Neon box for content at the bottom right */
+        .neon-box {
+            width: 300px;
+            height: 300px;
+            background: #111;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Glowing effect for the neon box */
+        .neon-box:before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.4), rgba(255, 0, 255, 0.4), rgba(255, 255, 0, 0.4));
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0.3;
+        }
+
+        /* Message styling inside the neon box */
+        .message {
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .message strong {
+            color: #00ffff;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Neon scroll bar styling */
+        .neon-box::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .neon-box::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+
+        .neon-box::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 255, 0.8);
+        }
+
+        /* Button styling */
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #00ffff;
+            background-color: #111;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+        }
+
+        /* Light theme styles */
+        body.light-theme {
+            background-color: #f0f0f0;
+            color: #000;
+        }
+
+        body.light-theme .neon-box {
+            background: #fff;
+            border: 2px solid rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-theme .message {
+            background: rgba(0, 0, 0, 0.05);
+            color: #000;
+        }
+    </style>
+    <!-- Google Fonts Import for Orbitron and Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Time Display -->
+    <div class="time" id="timeDisplay">Loading time...</div>
+
+    <!-- Neon glowing title and subtitle in the center -->
+    <h1>J.A.R.V.I.S</h1>
+    <div class="subtitle">By Lakshit Agarwal</div>
+
+    <!-- Neon box for content display at the bottom right corner -->
+    <div class="neon-box" id="contentBox">
+        <div class="message">Listening to your command...</div>
+    </div>
+
+    <!-- Button section -->
+    <div style="position: absolute; top: 20px; left: 20px;">
+        <button class="button" id="helpButton">Help</button>
+        <button class="button" id="settingsButton">Settings</button>
+        <button class="button" id="clearConsoleButton">Clear Console</button>
+        <button class="button" id="toggleThemeButton">Toggle Theme</button>
+        <button class="button" id="exitButton">Exit</button>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            // Convert to Indian Standard Time (IST)
+            const options = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const timeString = now.toLocaleTimeString('en-US', options);
+            
+            // Update the time display
+            document.getElementById('timeDisplay').textContent = `Current Time in India: ${timeString}`;
+        }
+
+        // Update the time every second
+        setInterval(updateTime, 1000);
+
+        let lastInput = "";  // Store last fetched input content
+        let lastOutput = ""; // Store last fetched output content
+        const contentBox = document.getElementById('contentBox');
+
+        async function fetchContent() {
+            try {
+                const response = await fetch('/input');
+                const data = await response.json();
+                
+                if (data.input && data.output) {
+                    // Handle input.txt content
+                    if (data.input !== lastInput) {
+                        const inputMessages = data.input.split('\n'); // Split input into lines
+
+                        inputMessages.forEach((line) => {
+                            const message = document.createElement('div');
+                            message.className = 'message';
+                            message.innerHTML = `<strong>User:</strong> ${line}`;
+                            contentBox.appendChild(message);
+                        });
+
+                        lastInput = data.input; // Update lastInput
+                    }
+
+                    // Handle output.txt content
+                    if (data.output !== lastOutput) {
+                        const outputMessages = data.output.split('\n'); // Split output into lines
+
+                        outputMessages.forEach((line) => {
+                            const message = document.createElement('div');
+                            message.className = 'message';
+                            message.innerHTML = `<strong>J.A.R.V.I.S:</strong> ${line}`;
+                            contentBox.appendChild(message);
+                        });
+
+                        lastOutput = data.output; // Update lastOutput
+                    }
+
+                    // Auto-scroll to the bottom of the content box
+                    contentBox.scrollTop = contentBox.scrollHeight;
+                }
+            } catch (error) {
+                console.error('Error fetching content:', error);
+            }
+        }
+
+        // Fetch content every 3 seconds
+        setInterval(fetchContent, 3000);
+
+        // Toggle between light and dark themes
+        const toggleThemeButton = document.getElementById('toggleThemeButton');
+        toggleThemeButton.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+        });
+
+        // Clear console button functionality
+        const clearConsoleButton = document.getElementById('clearConsoleButton');
+        clearConsoleButton.addEventListener('click', () => {
+            contentBox.innerHTML = ''; // Clear the content box
+        });
+
+        // Placeholder for Help, Settings, and Exit button actions
+        document.getElementById('helpButton').addEventListener('click', () => {
+            alert('Help button clicked');
+        });
+
+        document.getElementById('settingsButton').addEventListener('click', () => {
+            alert('Settings button clicked');
+        });
+
+        document.getElementById('exitButton').addEventListener('click', () => {
+            alert('Exit button clicked');
+        });
+    </script>
+</body>
+</html>
